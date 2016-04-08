@@ -1,0 +1,67 @@
+name: "metric"
+input: "data"
+input_shape {
+	dim: 1
+	dim: 3
+	dim: 256
+	dim: 128
+}
+
+layer {
+	name: "conv1"
+	type: "Convolution"
+	bottom: "data"
+	top: "conv1"
+	param { name: "conv1_W" }
+	param { name: "conv1_b" }
+	convolution_param {
+		num_output: 12
+		kernel_size: 4
+		stride: 2
+		weight_filler {
+			type: "xavier"
+		}
+		bias_filler {
+			type: "constant"
+			value: 0
+		}
+	}
+}
+
+layer {
+	name: "relu1"
+	type: "ReLU"
+	bottom: "conv1"
+	top: "conv1"
+}
+
+layer {
+	name: "pool1"
+	type: "Pooling"
+	bottom: "conv1"
+	top: "pool1"
+	pooling_param {
+		pool: AVE
+		kernel_size: 2
+		stride: 2
+	}
+}
+
+layer {
+	name: "ip1"
+	type: "InnerProduct"
+	bottom: "pool1"
+	top: "ip1"
+	param { name: "ip1_W" }
+	param { name: "ip1_b" }
+	inner_product_param {
+		num_output: 256
+		weight_filler {
+			type: "xavier"
+		}
+		bias_filler {
+			type: "constant"
+			value: 0
+		}
+	}
+}
