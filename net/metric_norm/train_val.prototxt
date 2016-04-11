@@ -95,6 +95,12 @@ layer {
 	}
 }
 
+layer {
+	name: "norm"
+	type: "Normalization"
+	bottom: "ip1_A"
+	top: "feat_A"
+}
 # ===== B tunnel =====
 
 layer {
@@ -156,6 +162,12 @@ layer {
 	}
 }
 
+layer {
+	name: "norm"
+	type: "Normalization"
+	bottom: "ip1_B"
+	top: "feat_B"
+}
 # ===== LOSS =====
 
 layer {
@@ -168,11 +180,11 @@ layer {
 layer {
 	name: "validation"
 	type: "ContrastiveLoss"
-	bottom: "ip1_A"
-	bottom: "ip1_B"
+	bottom: "feat_A"
+	bottom: "feat_B"
 	bottom: "label_S"
 	top: "loss"
 	contrastive_loss_param {
-		margin: 10
+		margin: 1
 	}
 }

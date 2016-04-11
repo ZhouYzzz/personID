@@ -1,2 +1,0 @@
-def happy():
-    print 'Hello'

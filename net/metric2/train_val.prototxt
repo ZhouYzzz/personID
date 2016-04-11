@@ -173,6 +173,6 @@ layer {
 	bottom: "label_S"
 	top: "loss"
 	contrastive_loss_param {
-		margin: 10
+		margin: 1
 	}
 }

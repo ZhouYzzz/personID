@@ -15,8 +15,8 @@ layer {
 	param { name: "conv1_W" }
 	param { name: "conv1_b" }
 	convolution_param {
-		num_output: 32
-		kernel_size: 5
+		num_output: 12
+		kernel_size: 4
 		stride: 2
 		weight_filler {
 			type: "xavier"
@@ -48,49 +48,9 @@ layer {
 }
 
 layer {
-	name: "conv2"
-	type: "Convolution"
-	bottom: "pool1"
-	top: "conv2"
-	param { name: "conv2_W" }
-	param { name: "conv2_b" }
-	convolution_param {
-		num_output: 32
-		kernel_size: 5
-		stride: 2
-		weight_filler {
-			type: "xavier"
-		}
-		bias_filler {
-			type: "constant"
-			value: 0
-		}
-	}
-}
-
-layer {
-	name: "relu2"
-	type: "ReLU"
-	bottom: "conv2"
-	top: "conv2"
-}
-
-layer {
-	name: "pool2"
-	type: "Pooling"
-	bottom: "conv2"
-	top: "pool2"
-	pooling_param {
-		pool: AVE
-		kernel_size: 2
-		stride: 2
-	}
-}
-
-layer {
 	name: "ip1"
 	type: "InnerProduct"
-	bottom: "pool2"
+	bottom: "pool1"
 	top: "ip1"
 	param { name: "ip1_W" }
 	param { name: "ip1_b" }

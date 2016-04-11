@@ -105,3 +105,10 @@ layer {
 		}
 	}
 }
+
+layer {
+	name: "norm"
+	type: "Normalization"
+	bottom: "ip1"
+	top: "feat"
+}
