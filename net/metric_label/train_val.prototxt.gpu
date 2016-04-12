@@ -5,7 +5,7 @@ layer {
 	top: "data"
 	top: "label"
 	hdf5_data_param {
-		source: "metric_shuf.txt"
+		source: "metric_shuf.txt.gpu"
 		batch_size: 64
 	}
 }

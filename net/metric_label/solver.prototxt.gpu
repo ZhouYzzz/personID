@@ -1,10 +1,10 @@
-net: "train_val.prototxt"
+net: "train_val.prototxt.gpu"
 base_lr: 0.001
 momentum: 0.9
 weight_decay: 0.0001
 lr_policy: "step"
-gamma: 0.5
-stepsize: 10000
+gamma: 0.2
+stepsize: 5000
 display: 100
-max_iter: 100000
+max_iter: 60000
 solver_mode: GPU
