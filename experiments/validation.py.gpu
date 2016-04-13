@@ -1,0 +1,109 @@
+#!/usr/bin/python
+import os.path as osp
+import numpy as np
+BENCHMARK_PATH = '/home/gpu/zhouyz/personID/benchmark'
+#print 'benchmark', BENCHMARK_PATH
+BENCHMARK = ['VIPeR', 'cuhk03', 'prid_2011']
+#NET_PATH = osp.join(osp.dirname(__file__),'..','net')
+#re_identifier_args = {
+#    'caffe_model':
+#        NET_PATH+'/metric/deploy.prototxt',
+#    'caffe_weights':
+#        NET_PATH+'/metric/_iter_9627.caffemodel'
+#}
+import pandas as pd
+def get_validation_set(benchmark='cuhk03', num=1):
+    if benchmark not in BENCHMARK:
+        raise NameError('No benchmark named [ %s ]'%benchmark)
+    if num not in xrange(10):
+        raise IndexError('Index [ %d ] out of range (0-9)'%num)
+    path = osp.join(BENCHMARK_PATH, benchmark)
+    validation = pd.read_csv(
+        osp.join(BENCHMARK_PATH,benchmark,'validation%d'%num),
+        header=None)
+    query = validation[0].values
+    gallery = validation[1].values
+    return path, query, gallery
+
+def validate_on_benchmark(benchmark='prid_2011'):
+    path, query, gallery = get_validation_set(benchmark=benchmark)
+    print query, gallery
+    import sys
+    net = caffe.Net(sys.argv[1],\
+                    sys.argv[2],\
+                    caffe.TEST)
+    gallery_feats = list()
+    from time import time as t
+    for im in gallery:
+        data = get_im_blob(path+'/'+im)
+        #print data[0,0,0,0]
+        t_ = t()
+        res = net.forward(data=data)
+        # print res['feat'][0]
+        #print 'time:', t()-t_
+        gallery_feats.append(res['feat'].copy()[0])
+        #gallery_feats.append(net.forward(data=data)['feat'])
+
+    # print gallery_feats
+    gallery_feats = np.array(gallery_feats)
+    # print np.linalg.norm(gallery_feats, ord=2, axis=1)
+    # print gallery_feats
+    print gallery_feats.shape
+
+    query_feats = list()
+    from time import time as t
+    for im in query:
+        data = get_im_blob(path+'/'+im)
+        #print data[0,0,0,0]
+        t_ = t()
+        res = net.forward(data=data)
+        #print 'time:', t()-t_
+        query_feats.append(res['feat'].copy()[0])
+        #gallery_feats.append(net.forward(data=data)['feat'])
+
+    query_feats = np.array(query_feats)
+    print query_feats.shape
+
+    print np.linalg.norm(gallery_feats-query_feats, ord=2,axis=1)
+
+    rank = np.zeros(316)
+    for i in xrange(316):
+        dis = np.linalg.norm(gallery_feats-query_feats[i,:],ord=2,axis=1)
+        #print dis
+        #print dis.argsort()
+        r = np.where(dis.argsort()==i)[0][0]
+        rank[r:] += 1
+
+    rank = rank/316
+    import matplotlib.pyplot as plt
+    plt.plot(rank)
+    plt.show()
+    print rank
+
+def get_im_blob(im):
+    import cv2
+    #print im_
+    im_ = cv2.imread(im)
+    if im_ is None:
+        print 'No image: [%s]'%im
+        exit()
+    im_ = cv2.resize(im_, (128,256))
+    im_ = im_.transpose(2,0,1)
+    im_ = np.expand_dims(im_, 0)
+    return im_
+
+def set_up_caffe():
+	import sys
+	sys.path.insert(0, '/home/gpu/zhouyz/caffe/python')
+	import warnings
+	warnings.filterwarnings('ignore')
+	import caffe
+	caffe.set_mode_gpu()
+	caffe.set_device(0)
+	#log('Caffe set up successfully')
+	return caffe
+
+if __name__ == '__main__':
+    caffe = set_up_caffe()
+    # get_validation_set()
+    validate_on_benchmark()
