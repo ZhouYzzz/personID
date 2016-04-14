@@ -1,0 +1,5 @@
+#!/bin/sh
+echo Test Net: [ $1 ]
+
+ROOT=/home/gpu/zhouyz/personID
+$ROOT/utils/valid_net.py.gpu $1

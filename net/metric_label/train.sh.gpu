@@ -1,4 +1,0 @@
-#!/bin/sh
-TOOLS=/home/gpu/zhouyz/caffe/build/tools
-
-$TOOLS/caffe train -solver=solver.prototxt.gpu

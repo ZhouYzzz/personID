@@ -41,13 +41,14 @@ def validate_on_benchmark(benchmark='prid_2011'):
         res = net.forward(data=data)
         # print res['feat'][0]
         #print 'time:', t()-t_
-        gallery_feats.append(res['feat'].copy()[0])
+        gallery_feats.append(res['feat'].copy().reshape(-1))
         #gallery_feats.append(net.forward(data=data)['feat'])
 
     # print gallery_feats
     gallery_feats = np.array(gallery_feats)
     # print np.linalg.norm(gallery_feats, ord=2, axis=1)
-    # print gallery_feats
+    print gallery_feats[0,:]
+    print np.linalg.norm(gallery_feats[0,:], ord=2)#,axis=1)
     print gallery_feats.shape
 
     query_feats = list()
@@ -58,13 +59,15 @@ def validate_on_benchmark(benchmark='prid_2011'):
         t_ = t()
         res = net.forward(data=data)
         #print 'time:', t()-t_
-        query_feats.append(res['feat'].copy()[0])
+        query_feats.append(res['feat'].copy().reshape(-1))
         #gallery_feats.append(net.forward(data=data)['feat'])
 
     query_feats = np.array(query_feats)
     print query_feats.shape
 
-    print np.linalg.norm(gallery_feats-query_feats, ord=2,axis=1)
+    for i in xrange(315):
+        print i, np.linalg.norm(gallery_feats[i,:]-query_feats[i,:], ord=2)#,axis=1)
+        print i, np.linalg.norm(gallery_feats[i+1,:]-query_feats[i,:], ord=2)#,axis=1)
 
     rank = np.zeros(316)
     for i in xrange(316):
@@ -78,7 +81,7 @@ def validate_on_benchmark(benchmark='prid_2011'):
     import matplotlib.pyplot as plt
     plt.plot(rank)
     plt.show()
-    print rank
+    #print rank
 
 def get_im_blob(im):
     import cv2
@@ -87,7 +90,7 @@ def get_im_blob(im):
     if im_ is None:
         print 'No image: [%s]'%im
         exit()
-    im_ = cv2.resize(im_, (128,256))
+    im_ = cv2.resize(im_, (64,128))
     im_ = im_.transpose(2,0,1)
     im_ = np.expand_dims(im_, 0)
     return im_
@@ -106,4 +109,4 @@ def set_up_caffe():
 if __name__ == '__main__':
     caffe = set_up_caffe()
     # get_validation_set()
-    validate_on_benchmark()
+    validate_on_benchmark(benchmark='cuhk03')

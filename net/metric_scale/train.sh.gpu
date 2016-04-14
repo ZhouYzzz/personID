@@ -1,0 +1,5 @@
+#!/bin/sh
+CAFFE=/home/gpu/zhouyz/caffe
+
+$CAFFE/build/tools/caffe train -solver=solver.prototxt.gpu\
+	-weights $CAFFE/models/bvlc_alexnet/bvlc_alexnet.caffemodel
