@@ -4,12 +4,11 @@ layer {
   type: "Data"
   top: "data"
   top: "label"
-  #transform_param {
- #   mirror: 1
-#	crop_size: 64
-  #}
+  transform_param {
+	mirror: 1
+  }
   data_param {
-    source: "lmdb_metric_crop"
+    source: "lmdb_metric"
     batch_size: 128
 	backend: LMDB
   }
@@ -729,10 +728,23 @@ layer {
 }
 # ===== LOSS =====
 layer {
+  name: "norm1"
+  type: "Normalization"
+  bottom: "feat"
+  top: "feat_n"
+}
+layer {
+  name: "norm2"
+  type: "Normalization"
+  bottom: "feat_p"
+  top: "feat_p_n"
+}
+
+layer {
   name: "loss"
   type: "ContrastiveLoss"
-  bottom: "feat"
-  bottom: "feat_p"
+  bottom: "feat_n"
+  bottom: "feat_p_n"
   bottom: "label"
   top: "loss"
   contrastive_loss_param {

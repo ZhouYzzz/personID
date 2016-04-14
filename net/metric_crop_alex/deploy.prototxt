@@ -3,8 +3,8 @@ input: "data"
 input_shape {
 	dim: 1
 	dim: 3
-	dim: 128
-	dim: 64
+	dim: 240
+	dim: 80
 }
 # layer {
 #   name: "data"
@@ -287,7 +287,7 @@ layer {
   name: "ip8"
   type: "InnerProduct"
   bottom: "ip7"
-  top: "feat"
+  top: "ip8"
   param {
 	name: "ip8"
     lr_mult: 1
@@ -301,4 +301,10 @@ layer {
   inner_product_param {
     num_output: 512
   }
+}
+layer {
+  name: "norm"
+  type: "Normalization"
+  bottom: "ip8"
+  top: "feat"
 }
