@@ -1,0 +1,17 @@
+name: "AlexNet"
+layer {
+	name: "data"
+	type: "Data"
+	top: "data"
+	top: "label"
+	transform_param {
+		mirror: 1
+	}
+	data_param {
+		source: "lmdb_metric_crop_small"
+		backend: LMDB
+		batch_size: 128
+	}
+}
+
+

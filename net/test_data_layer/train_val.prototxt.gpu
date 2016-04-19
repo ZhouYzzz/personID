@@ -4,25 +4,9 @@ layer {
   type: "HDF5Data"
   top: "data"
   top: "label"
-  include {
-    phase: TRAIN
-  }
   hdf5_data_param {
     source: "h5_metric_crop.txt"
     batch_size: 100
-  }
-}
-layer {
-  name: "pair_data"
-  type: "HDF5Data"
-  top: "data"
-  top: "label"
-  include {
-    phase: TEST
-  }
-  hdf5_data_param {
-    source: "h5_metric_crop_valid.txt"
-	batch_size: 136
   }
 }
 # layer {

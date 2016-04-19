@@ -1,0 +1,317 @@
+name: "AlexNet"
+layer {
+  name: "pair_data"
+  type: "HDF5Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  hdf5_data_param {
+    source: "h5_metric_crop.txt"
+    batch_size: 100
+  }
+}
+layer {
+  name: "pair_data"
+  type: "HDF5Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  hdf5_data_param {
+    source: "h5_metric_crop_valid.txt"
+	batch_size: 136
+  }
+}
+# layer {
+# 	name: "data"
+# 	type: "HDF5Data"
+# 	top: "data"
+# 	top: "label"
+# 	hdf5_data_param {
+# 		source: "metric_shuf.txt"
+# 		batch_size: 64
+# 	}
+# }
+layer {
+  name: "slice_pair"
+  type: "Slice"
+  bottom: "data"
+  top: "A/data"
+  top: "B/data"
+  slice_param {
+    slice_dim: 1
+	slice_point: 3
+  }
+}
+
+
+layer {
+  name: "A/conv1"
+  type: "Convolution"
+  bottom: "A/data"
+  top: "A/conv1"
+  param {
+	name: "conv1"
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+	name: "conv1_b"
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 32
+    kernel_size: 5
+    stride: 2
+	weight_filler {
+	  type: "gaussian"
+	  std: 0.01
+	}
+	bias_filler {
+	  type: "constant"
+	  value: 0
+	}
+  }
+}
+layer {
+  name: "A/relu1"
+  type: "ReLU"
+  bottom: "A/conv1"
+  top: "A/conv1"
+}
+
+layer {
+  name: "A/pool1"
+  type: "Pooling"
+  bottom: "A/conv1"
+  top: "A/pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "A/conv2"
+  type: "Convolution"
+  bottom: "A/pool1"
+  top: "A/conv2"
+  param {
+	name: "conv2"
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+	name: "conv2_b"
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 32
+    kernel_size: 5
+	stride: 2
+	weight_filler {
+	  type: "gaussian"
+	  std: 0.01
+	}
+	bias_filler {
+	  type: "constant"
+	  value: 0
+	}
+  }
+}
+layer {
+  name: "A/relu2"
+  type: "ReLU"
+  bottom: "A/conv2"
+  top: "A/conv2"
+}
+layer {
+  name: "A/pool2"
+  type: "Pooling"
+  bottom: "A/conv2"
+  top: "A/pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "A/ip1"
+  type: "InnerProduct"
+  bottom: "A/pool2"
+  top: "A/ip1"
+  param {
+	name: "ip1"
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+	name: "ip1_b"
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 512
+	weight_filler {
+	  type: "gaussian"
+	  std: 0.001
+	}
+	bias_filler {
+	  type: "constant"
+	  value: 0
+	}
+  }
+  
+}
+layer {
+  name: "A/norm"
+  type: "Normalization"
+  bottom: "A/ip1"
+  top: "A/feat"
+}
+
+layer {
+  name: "B/conv1"
+  type: "Convolution"
+  bottom: "B/data"
+  top: "B/conv1"
+  param {
+	name: "conv1"
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+	name: "conv1_b"
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 32
+    kernel_size: 5
+    stride: 2
+	weight_filler {
+	  type: "gaussian"
+	  std: 0.01
+	}
+	bias_filler {
+	  type: "constant"
+	  value: 0
+	}
+  }
+}
+layer {
+  name: "B/relu1"
+  type: "ReLU"
+  bottom: "B/conv1"
+  top: "B/conv1"
+}
+
+layer {
+  name: "B/pool1"
+  type: "Pooling"
+  bottom: "B/conv1"
+  top: "B/pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "B/conv2"
+  type: "Convolution"
+  bottom: "B/pool1"
+  top: "B/conv2"
+  param {
+	name: "conv2"
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+	name: "conv2_b"
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 32
+    kernel_size: 5
+	stride: 2
+	weight_filler {
+	  type: "gaussian"
+	  std: 0.01
+	}
+	bias_filler {
+	  type: "constant"
+	  value: 0
+	}
+  }
+}
+layer {
+  name: "B/relu2"
+  type: "ReLU"
+  bottom: "B/conv2"
+  top: "B/conv2"
+}
+layer {
+  name: "B/pool2"
+  type: "Pooling"
+  bottom: "B/conv2"
+  top: "B/pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "B/ip1"
+  type: "InnerProduct"
+  bottom: "B/pool2"
+  top: "B/ip1"
+  param {
+	name: "ip1"
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+	name: "ip1_b"
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 512
+	weight_filler {
+	  type: "gaussian"
+	  std: 0.001
+	}
+	bias_filler {
+	  type: "constant"
+	  value: 0
+	}
+  }
+  
+}
+layer {
+  name: "B/norm"
+  type: "Normalization"
+  bottom: "B/ip1"
+  top: "B/feat"
+}
+layer {
+  name: "loss"
+  type: "ContrastiveLoss"
+  bottom: "A/feat"
+  bottom: "B/feat"
+  bottom: "label"
+  top: "loss"
+  contrastive_loss_param {
+    margin: 2
+  }
+}
+

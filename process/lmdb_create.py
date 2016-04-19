@@ -20,10 +20,10 @@ num_pairs = train.shape[0]
 
 from process_cuhk03 import im_read
 
-env = lmdb.open('lmdb_metric_crop', map_size=int(1e12))
+env = lmdb.open('lmdb_metric_crop_small', map_size=int(1e12))
 
 with env.begin(write=True) as txn:
-    for i in xrange(num_pairs-20000,num_pairs):
+    for i in xrange(1000):
         if (i % 100 == 0):
             print i,'/',num_pairs
 
