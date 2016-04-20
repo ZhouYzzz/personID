@@ -33,8 +33,8 @@ from process_cuhk03 import im_read
 
 for FI in xrange(1):
     print FI+1, '/', 1
-    F = h5py.File('h5_metric_crop_valid/%04d.h5'%FI, 'w')
-    F.create_dataset('data', (136,6,240,80), dtype='uint8')
+    F = h5py.File('h5_metric_crop_valid_python/%04d.h5'%FI, 'w')
+    F.create_dataset('data', (136,6,240,120), dtype='uint8')
     F.create_dataset('label', (136,1,1,1), dtype='uint8')
     for i in xrange(136):
         PAIR = train.iloc[i]

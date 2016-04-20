@@ -12,7 +12,7 @@ from threading import Thread
 from multiprocessing import Pool
 from cuhk03 import CUHK03
 
-BATCHSIZE = 128
+BATCHSIZE = 100
 
 class ImBuffer():
     def __init__(self, imlist):
@@ -68,10 +68,10 @@ def generate_pairs():
     return (im1, im2)
 
 def advance_batch(result, buffer, pool):
-    #t = time()
+    t = time()
     data = np.zeros([BATCHSIZE,6,240,120])
     label = np.zeros([BATCHSIZE,1,1,1])
-    cls = np.random.randint(*buffer.bound, size=BATCHSIZE)
+    cls = np.random.randint(200, size=BATCHSIZE)
     for i in xrange(BATCHSIZE):
         pair = buffer.genpair(i)
         data[i] = pair[1]
@@ -79,7 +79,7 @@ def advance_batch(result, buffer, pool):
 
     result['data'] = data
     result['label'] = label
-    #LOG('process take %.4f s.'%(time()-t))
+    LOG('process take %.4f s.'%(time()-t))
 
 class BatchAdvancer():
     def __init__(self, result, buffer, pool):

@@ -35,7 +35,7 @@ class CUHK03():
         self.clsidx = self.idx2cls()
         self.numcls = 1467
         # when generate pairs, the bound for choice
-        self.bound = [0,200]
+        self.bound = [0,10]
 
     def idx2cls(self):
         clsidx = list()

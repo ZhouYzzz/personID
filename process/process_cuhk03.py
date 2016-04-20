@@ -16,7 +16,13 @@ def im_read(name, crop=True):
     if crop:
         im = im_crop(im, CROP_HEIGHT, CROP_WIDTH)
 
+    
+    im = cv2.resize(im, (120,240))
     im = im.transpose((2,0,1))
+    
+    '''
+    NOTE!!! changed for pythond data layer, need delete
+    '''
     #im = np.expand_dims(im,0)
     return im
 

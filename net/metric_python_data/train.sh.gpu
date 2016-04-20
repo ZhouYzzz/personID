@@ -1,0 +1,6 @@
+#!/bin/sh
+CAFFE=/home/gpu/zhouyz/caffe
+
+export PYTHONPATH=~/zhouyz/caffe/python:~/zhouyz/personID/net/metric_python_data
+$CAFFE/build/tools/caffe train -solver=solver.prototxt.gpu\
+	-weights $CAFFE/models/bvlc_alexnet/bvlc_alexnet.caffemodel

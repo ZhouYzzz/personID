@@ -90,7 +90,7 @@ def get_im_blob(im):
     if im_ is None:
         print 'No image: [%s]'%im
         exit()
-    im_ = cv2.resize(im_, (80,240))
+    im_ = cv2.resize(im_, (120,240))
     im_ = im_.transpose(2,0,1)
     im_ = np.expand_dims(im_, 0)
     return im_
